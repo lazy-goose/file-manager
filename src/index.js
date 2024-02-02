@@ -1,6 +1,8 @@
 import process from 'process';
 import * as readline from 'readline/promises';
 import store from './store.js';
+import './modules/navigation.js';
+import navigation from './modules/navigation.js';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -17,12 +19,33 @@ const getUsernameArgument = (fallback) => {
 };
 
 const init = () => {
-  rl.on('line', (input) => {
-    switch (input.trimEnd()) {
-      case '.exit':
-        rl.close();
-      default:
-        console.log('Unknown command');
+  rl.on('line', async (initialLine) => {
+    const line = initialLine.trimEnd();
+    const [cmd, ...args] = line.split(' ');
+    try {
+      switch (cmd) {
+        case '.exit':
+          rl.close();
+          return;
+        case 'ls':
+          await navigation.ls();
+          break;
+        case 'pwd':
+          navigation.pwd();
+          break;
+        case 'up':
+          navigation.cdParent();
+          break;
+        case 'cd':
+          navigation.cd(args[0]);
+          break;
+        default:
+          console.log('Unknown command');
+      }
+      navigation.pwd();
+    } catch (e) {
+      throw e;
+      console.log('Operation failed');
     }
     rl.prompt();
   })
