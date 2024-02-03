@@ -3,6 +3,8 @@ import * as readline from 'readline/promises';
 import store from './store.js';
 import './modules/navigation.js';
 import navigation from './modules/navigation.js';
+import osStats from './modules/osStats.js';
+import { InvalidInput, OperationFailed } from './errors.js';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -39,15 +41,40 @@ const init = () => {
         case 'cd':
           navigation.cd(args[0]);
           break;
+        case 'os':
+          switch (args[0]) {
+            case '--EOL':
+              osStats.eol();
+              break;
+            case '--cpus':
+              osStats.cpus();
+              break;
+            case '--homedir':
+              osStats.homedir();
+              break;
+            case '--username':
+              osStats.username();
+              break;
+            case '--architecture':
+              osStats.arch();
+              break;
+            default:
+              throw new InvalidInput('unknown os command argument');
+          }
+          break;
         default:
-          console.log('Unknown command');
+          throw new InvalidInput('unknown command');
       }
       navigation.pwd();
     } catch (e) {
-      throw e;
-      console.log('Operation failed');
+      if (e instanceof InvalidInput || e instanceof OperationFailed) {
+        console.log(e.message);
+        return;
+      }
+      console.log(new OperationFailed(e.message).message);
+    } finally {
+      rl.prompt();
     }
-    rl.prompt();
   })
     .on('SIGINT', () => {
       console.log();
