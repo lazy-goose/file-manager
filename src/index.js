@@ -7,6 +7,7 @@ import navigation from './modules/navigation.js';
 import osStats from './modules/osStats.js';
 import fileSystem from './modules/fileSystem.js';
 import hash from './modules/hash.js';
+import compression from './modules/compression.js';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -84,6 +85,12 @@ const init = () => {
           break;
         case 'hash':
           await hash.digest(args[0]);
+          break;
+        case 'compress':
+          await compression.compress(args[0], args[1]);
+          break;
+        case 'decompress':
+          await compression.decompress(args[0], args[1]);
           break;
         default:
           throw new InvalidInput('unknown command');
