@@ -1,10 +1,11 @@
 import process from 'process';
 import * as readline from 'readline/promises';
+import os from 'os';
 import store from './store.js';
-import './modules/navigation.js';
+import { InvalidInput, OperationFailed } from './errors.js';
 import navigation from './modules/navigation.js';
 import osStats from './modules/osStats.js';
-import { InvalidInput, OperationFailed } from './errors.js';
+import fileSystem from './modules/fileSystem.js';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -62,6 +63,24 @@ const init = () => {
               throw new InvalidInput('unknown os command argument');
           }
           break;
+        case 'cat':
+          await fileSystem.cat(args[0]);
+          break;
+        case 'add':
+          await fileSystem.add(args[0]);
+          break;
+        case 'rn':
+          await fileSystem.rn(args[0], args[1]);
+          break;
+        case 'cp':
+          await fileSystem.cp(args[0], args[1]);
+          break;
+        case 'mv':
+          await fileSystem.mv(args[0], args[1]);
+          break;
+        case 'rm':
+          await fileSystem.rm(args[0]);
+          break;
         default:
           throw new InvalidInput('unknown command');
       }
@@ -86,10 +105,15 @@ const init = () => {
       process.exit(0);
     });
 
+  process.chdir(os.homedir());
+
   const Username = getUsernameArgument('Unknown');
   store.setValue('username', Username);
 
   console.log(`Welcome to the File Manager, ${Username}!`);
+  console.log();
+  navigation.pwd();
+
   rl.prompt();
 };
 

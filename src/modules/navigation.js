@@ -1,7 +1,5 @@
-import os from 'os';
 import fs from 'fs/promises';
-
-process.chdir(os.homedir());
+import { resolvePath } from '../utils.js';
 
 /**
  * @description Print current working directory
@@ -22,7 +20,7 @@ const cdParent = () => {
  * @description Go to dedicated folder from current directory (path argument can be relative or absolute)
  */
 const cd = (directory) => {
-  process.chdir(directory.replace('~', os.homedir()));
+  process.chdir(resolvePath(directory));
 };
 
 /**
