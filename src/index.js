@@ -6,6 +6,7 @@ import { InvalidInput, OperationFailed } from './errors.js';
 import navigation from './modules/navigation.js';
 import osStats from './modules/osStats.js';
 import fileSystem from './modules/fileSystem.js';
+import hash from './modules/hash.js';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -80,6 +81,9 @@ const init = () => {
           break;
         case 'rm':
           await fileSystem.rm(args[0]);
+          break;
+        case 'hash':
+          await hash.digest(args[0]);
           break;
         default:
           throw new InvalidInput('unknown command');
