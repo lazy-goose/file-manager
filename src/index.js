@@ -8,6 +8,7 @@ import osStats from './modules/osStats.js';
 import fileSystem from './modules/fileSystem.js';
 import hash from './modules/hash.js';
 import compression from './modules/compression.js';
+import { parseInputString } from './utils.js';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -25,13 +26,21 @@ const getUsernameArgument = (fallback) => {
 
 const init = () => {
   rl.on('line', async (initialLine) => {
-    const line = initialLine.trimEnd();
-    const [cmd, ...args] = line.split(' ');
     try {
+      const line = initialLine.trimEnd();
+      const [cmd, ...args] = parseInputString(line);
+
+      const afterEachSuccess = () => {
+        navigation.pwd();
+      };
+
       switch (cmd) {
         case '.exit':
           rl.close();
           return;
+        case 'clear':
+          console.clear();
+          break;
         case 'ls':
           await navigation.ls();
           break;
