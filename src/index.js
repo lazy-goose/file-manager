@@ -115,7 +115,7 @@ const init = () => {
         default:
           throw new InvalidInput('unknown command');
       }
-      navigation.pwd();
+      afterEachSuccess();
     } catch (e) {
       if (e instanceof InvalidInput || e instanceof OperationFailed) {
         console.log(e.message);
