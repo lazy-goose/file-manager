@@ -50,4 +50,54 @@ const parseInputString = (inputString) => {
   return out;
 };
 
-export { resolvePath, parseInputString };
+/**
+ * @typedef {{
+ *   length?: number
+ *   strictLength?: boolean
+ *   falsy?: boolean
+ *   error?: Error | null | boolean
+ * }} UserOptions
+ *
+ * @param {string[]} args
+ * @returns {{
+ *   withOptions: (userOptions?: UserOptions | Record<string, never>) => boolean | never
+ * }}
+ */
+const validateArgs = (args) => ({
+  withOptions: (userOptions = {}) => {
+    const {
+      length: maxLength = -1,
+      strictLength = true,
+      falsy = false,
+      error = InvalidInput,
+    } = userOptions;
+
+    const falseExit = (msg = '') => {
+      if (typeof error === 'function') {
+        throw new error(msg);
+      }
+      return false;
+    };
+
+    if (maxLength !== -1) {
+      const errorMsg = `expected ${maxLength} argument${
+        maxLength > 1 ? 's' : ''
+      }, but got ${args.length}`;
+      if (strictLength && args.length !== maxLength) {
+        return falseExit(errorMsg);
+      }
+      if (!strictLength && args.length > maxLength) {
+        return falseExit(errorMsg);
+      }
+    }
+
+    if (!falsy && !args.every(Boolean)) {
+      const errorMsg = 'has falsy argument';
+      return falseExit(errorMsg);
+    }
+
+    return true;
+  },
+});
+
+export { resolvePath, parseInputString, validateArgs };

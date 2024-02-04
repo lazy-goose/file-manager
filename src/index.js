@@ -8,7 +8,7 @@ import osStats from './modules/osStats.js';
 import fileSystem from './modules/fileSystem.js';
 import hash from './modules/hash.js';
 import compression from './modules/compression.js';
-import { parseInputString } from './utils.js';
+import { parseInputString, validateArgs } from './utils.js';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -51,9 +51,11 @@ const init = () => {
           navigation.cdParent();
           break;
         case 'cd':
+          validateArgs(args).withOptions({ length: 1 });
           navigation.cd(args[0]);
           break;
         case 'os':
+          validateArgs(args).withOptions({ length: 1 });
           switch (args[0]) {
             case '--EOL':
               osStats.eol();
@@ -75,30 +77,39 @@ const init = () => {
           }
           break;
         case 'cat':
+          validateArgs(args).withOptions({ length: 1 });
           await fileSystem.cat(args[0]);
           break;
         case 'add':
+          validateArgs(args).withOptions({ length: 1 });
           await fileSystem.add(args[0]);
           break;
         case 'rn':
+          validateArgs(args).withOptions({ length: 2 });
           await fileSystem.rn(args[0], args[1]);
           break;
         case 'cp':
+          validateArgs(args).withOptions({ length: 2 });
           await fileSystem.cp(args[0], args[1]);
           break;
         case 'mv':
+          validateArgs(args).withOptions({ length: 2 });
           await fileSystem.mv(args[0], args[1]);
           break;
         case 'rm':
+          validateArgs(args).withOptions({ length: 1 });
           await fileSystem.rm(args[0]);
           break;
         case 'hash':
+          validateArgs(args).withOptions({ length: 1 });
           await hash.digest(args[0]);
           break;
         case 'compress':
+          validateArgs(args).withOptions({ length: 2 });
           await compression.compress(args[0], args[1]);
           break;
         case 'decompress':
+          validateArgs(args).withOptions({ length: 2 });
           await compression.decompress(args[0], args[1]);
           break;
         default:
