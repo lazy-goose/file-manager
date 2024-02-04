@@ -20,8 +20,17 @@ const rl = readline.createInterface({
  * @param {string} fallback
  */
 const getUsernameArgument = (fallback) => {
-  const argPos = process.argv.indexOf('--username');
-  return argPos !== -1 ? process.argv[argPos + 1] || fallback : fallback;
+  const argPos = process.argv.findLastIndex((arg) =>
+    arg.startsWith('--username')
+  );
+  const arg = process.argv[argPos];
+  if (!arg) {
+    return fallback;
+  }
+  if (arg.startsWith('--username=')) {
+    return arg.split('=')[1];
+  }
+  return process.argv[argPos + 1] || fallback;
 };
 
 const init = () => {
@@ -36,6 +45,7 @@ const init = () => {
 
       switch (cmd) {
         case '.exit':
+        case 'exit':
           rl.close();
           return;
         case 'clear':
@@ -112,6 +122,8 @@ const init = () => {
           validateArgs(args).withOptions({ length: 2 });
           await compression.decompress(args[0], args[1]);
           break;
+        case '':
+          return;
         default:
           throw new InvalidInput('unknown command');
       }
