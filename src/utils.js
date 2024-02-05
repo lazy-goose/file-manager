@@ -4,9 +4,10 @@ import { InvalidInput } from './errors.js';
 
 /**
  * @param {string} filePath
+ * @param {string[]} toJoin
  */
-const resolvePath = (filePath) => {
-  return path.resolve(filePath.replace('~', os.homedir()));
+const resolvePath = (filePath, ...toJoin) => {
+  return path.resolve(filePath.replace('~', os.homedir()), ...toJoin);
 };
 
 /**

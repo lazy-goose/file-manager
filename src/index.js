@@ -100,11 +100,11 @@ const init = () => {
           break;
         case 'cp':
           validateArgs(args).withOptions({ length: 2 });
-          await fileSystem.cp(args[0], args[1]);
+          await fileSystem.cpToFolder(args[0], args[1]);
           break;
         case 'mv':
           validateArgs(args).withOptions({ length: 2 });
-          await fileSystem.mv(args[0], args[1]);
+          await fileSystem.mvToFolder(args[0], args[1]);
           break;
         case 'rm':
           validateArgs(args).withOptions({ length: 1 });
