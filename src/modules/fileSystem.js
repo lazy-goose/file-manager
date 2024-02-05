@@ -1,6 +1,5 @@
 import { promises as fs, createReadStream, createWriteStream } from 'fs';
 import { resolvePath } from '../utils.js';
-import process from 'process';
 import stream from 'stream/promises';
 
 /**
@@ -10,7 +9,7 @@ import stream from 'stream/promises';
 const cat = async (pathToFile) => {
   return new Promise((resolve, reject) => {
     const readStream = createReadStream(resolvePath(pathToFile));
-    readStream.on('data', (chunk) => process.stdout.write(chunk));
+    readStream.on('data', (chunk) => console.log(chunk.toString()));
     readStream.on('error', reject);
     readStream.on('close', resolve);
   });
