@@ -1,0 +1,7 @@
+{
+  "js/ts.implicitProjectConfig.checkJs": true,
+  "javascript.preferences.importModuleSpecifierEnding": "js",
+  "[js]": {
+    "editor.tabSize": 2
+  }
+}
